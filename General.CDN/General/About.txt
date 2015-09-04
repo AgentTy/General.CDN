@@ -1,0 +1,2 @@
+﻿The files in General and it's subfolders are copied from the General library which is available in it's entirety elsewhere.
+You may remove these files if you are including the General library as a reference.

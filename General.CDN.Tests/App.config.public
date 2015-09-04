@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Note: Add entries to the App.config file for configuration settings
+    that apply only to the Test project.
+-->
+<configuration>
+    <appSettings>
+      <add key="AWSProfileName" value="ENTER AWS PROFILE NAME HERE (setup via Visual Studio plugin)" />
+      <add key="AmazonS3Bucket" value="unittest"/>
+      <add key="AzureBucket" value="unittest"/>
+    </appSettings>
+    <connectionStrings>
+      <add name="AzureStorageConnectionString" connectionString="ENTER AZURE CONNECTION STRING HERE" />
+    </connectionStrings>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      
+    </assemblyBinding>
+  </runtime>
+<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5.1" /></startup></configuration>
