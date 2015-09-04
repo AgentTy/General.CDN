@@ -18,3 +18,12 @@ General.CDN for .Net C# provides an easy interface that turns Amazon S3 or Azure
             server1.StoreImage("C:\\SomeFile.jpg", file1);
             if (server1.FileExistsInCDN(file1) || server1.FileExistsLocal(file1))
                 server1.Delete(file1);
+
+            string strURL, strLocalRelativePath, strPhysicalPath, strBasePath, strCDNPath;
+            strURL = server1.GetLocalURL(file1);
+            strPhysicalPath = server1.GetLocalDiskPath(file1);
+            strLocalRelativePath = server1.GetLocalRelativePath(file1);
+            strBasePath = server1.GetBasePath(file1);
+            strCDNPath = server1.GetCDNPath(file1, true);
+            var blnExistsLocal = server1.FileExistsLocal(file1);
+            var enuExistsRemote = server1.FileExistsLocal_HTTPCheck(file1);
