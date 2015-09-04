@@ -148,6 +148,7 @@ csx/
 AppPackages/
 
 # Others
+.svn/
 sql/
 *.Cache
 ClientBin/
