@@ -38,10 +38,10 @@ namespace General.CDN.Tests.Controllers
         public void TestImagePathVariants()
         {
             IFileServer server1 = new FileServerAzure("/Uploads/", "http://www.testdomain.com", null, AzureBucket);
-            IFileQuery file1 = new FileQuery("Floorplan_24_635550193570112158.jpg", "FloorplanImageFile");
+            IFileQuery file1 = new FileQuery("Awesome.jpg", "Images");
 
             IFileServer server2 = new FileServerAzure("/Uploads/", "http://www.anotherdomain.com", null, AzureBucket);
-            IFileQuery file2 = new FileQuery("triple_platinum_weddings_11_82691_photo_101.png", "ExPhotoImageFile", "/");
+            IFileQuery file2 = new FileQuery("Coolness.png", "ExPhotoImageFile", "/");
 
             string strURL, strLocalRelativePath, strPhysicalPath, strBasePath, strCDNPath;
             bool blnExistsLocal = false;
@@ -56,7 +56,7 @@ namespace General.CDN.Tests.Controllers
             enuExistsRemote = server1.FileExistsLocal_HTTPCheck(file1);
 
             Assert.IsNotNull(strURL);
-            Assert.AreEqual(strURL, "http://www.testdomain.com/Uploads/FloorplanImageFile/Floorplan_24_635550193570112158.jpg");
+            Assert.AreEqual(strURL, "http://www.testdomain.com/Uploads/Images/Awesome.jpg");
             Assert.IsNotNull(strPhysicalPath);
             Assert.IsNotNull(strLocalRelativePath);
             Assert.IsNotNull(strBasePath);
@@ -78,7 +78,7 @@ namespace General.CDN.Tests.Controllers
             enuExistsRemote = server2.FileExistsLocal_HTTPCheck(file2);
 
             Assert.IsNotNull(strURL);
-            Assert.AreEqual(strURL, "http://www.anotherdomain.com/Uploads/ExPhotoImageFile/triple_platinum_weddings_11_82691_photo_101.png");
+            Assert.AreEqual(strURL, "http://www.anotherdomain.com/Uploads/ExPhotoImageFile/Coolness.png");
             Assert.IsNotNull(strPhysicalPath);
             Assert.IsNotNull(strLocalRelativePath);
             Assert.IsNotNull(strBasePath);

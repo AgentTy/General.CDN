@@ -25,6 +25,7 @@ namespace General.CDN
 
         public bool IsCurrentVersionOf(FileProperties fileMaster)
         {
+            //First line of defense, different size means different versions
             if (this.Length != fileMaster.Length)
                 return false;
 
@@ -56,8 +57,9 @@ namespace General.CDN
             }
             if (!String.IsNullOrEmpty(this.ContentMD5) && !String.IsNullOrEmpty(fileMaster.ContentMD5))
                 if (fileMaster.ContentMD5 != this.ContentMD5)
-                    return false;
+                    return false; //MD5 hash didn't match
 
+            //We'll assume they are the same, this will be accurate most of the time
             return true;
         }
     }

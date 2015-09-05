@@ -156,7 +156,7 @@ namespace General.CDN.Tests.Controllers
             string strFishPath = TestContent.GetContentFilePhysicalPath("/Images/Jellyfish.jpg");
             Microsoft.WindowsAzure.Storage.CloudStorageAccount objCDNClient 
                 = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["AzureStorageConnectionString"].ConnectionString);
-            FileServerAzure server1 = new FileServerAzure("LocalFolder", "", objCDNClient, AzureBucket);
+            IFileServer server1 = new FileServerAzure("LocalFolder", "", objCDNClient, AzureBucket);
             
             //Test 1: Delete a file if it exists, then store an image, check it's existance, get it's properties, and compare file versions
             IFileQuery file1 = new FileQuery("Jellyfish.jpg", "Images");
