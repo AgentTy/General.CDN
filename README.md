@@ -24,11 +24,16 @@ General.CDN for .Net C# provides an easy interface that turns Amazon S3 or Azure
             IFileServer server1 = new FileServerAzure("/Uploads/", "http://www.testdomain.com", null, "AzureBucketName");
             IFileQuery file1 = new FileQuery("Awesome.jpg", "Images");     
             string strURL, strLocalRelativePath, strPhysicalPath, strBasePath, strCDNPath;
-            strURL = server1.GetLocalURL(file1); //http://www.testdomain.com/Uploads/Images/Awesome.jpg
-            strPhysicalPath = server1.GetLocalDiskPath(file1); //C:\\Users\\MyUser\\Documents\\General.CDN\\General.CDN.Tests\\bin\\Debug\\Uploads\\Images\\Awesome.jpg
-            strLocalRelativePath = server1.GetLocalRelativePath(file1); //Uploads/Images/Awesome.jpg
-            strBasePath = server1.GetBasePath(file1); //Images/Awesome.jpg
-            strCDNPath = server1.GetCDNPath(file1, true); //unittest/Images/Awesome.jpg
+            strURL = server1.GetLocalURL(file1); 
+                        //http://www.testdomain.com/Uploads/Images/Awesome.jpg
+            strPhysicalPath = server1.GetLocalDiskPath(file1); 
+                        //C:\\Users\\MyUser\\Documents\\General.CDN\\General.CDN.Tests\\bin\\Debug\\Uploads\\Images\\Awesome.jpg
+            strLocalRelativePath = server1.GetLocalRelativePath(file1); 
+                        //Uploads/Images/Awesome.jpg
+            strBasePath = server1.GetBasePath(file1); 
+                        //Images/Awesome.jpg
+            strCDNPath = server1.GetCDNPath(file1, true); 
+                        //unittest/Images/Awesome.jpg
             var blnExistsLocal = server1.FileExistsLocal(file1);
             var enuExistsRemote = server1.FileExistsLocal_HTTPCheck(file1);
 
