@@ -13,6 +13,9 @@ General.CDN for .Net C# provides an easy interface that turns Amazon S3 or Azure
             if (server1.FileExistsInCDN(file1) || server1.FileExistsLocal(file1))
                 server1.Delete(file1);
 
+
+
+
             //Simple example for Azure
             Microsoft.WindowsAzure.Storage.CloudStorageAccount objCDNClient
                 = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["AzureStorageConnectionString"].ConnectionString);
@@ -26,7 +29,9 @@ General.CDN for .Net C# provides an easy interface that turns Amazon S3 or Azure
                 server1.Delete(file1);
 
 
-            //Look at all the ways an IFileQuery can be turned into useful paths, the file server setup is designed so that every node can store it's files in different disk paths, but a given FileQuery will find the correct data at any node, regardless of their specific configurations. The "Base" path is the portion that is common to all nodes, local and remote.
+
+
+            //Look at all the ways an IFileQuery can be turned into useful paths, the file server setup is designed so that every node can store it's files in different disk paths, but a given FileQuery will find the correct file at any node, regardless of their specific configurations. The "Base" path is the portion that is common to all nodes, local and remote.
             IFileServer server1 = new FileServerAzure("/Uploads/", "http://www.testdomain.com", null, "AzureBucketName");
             IFileQuery file1 = new FileQuery("Awesome.jpg", "Images");     
             string strURL, strLocalRelativePath, strPhysicalPath, strBasePath, strCDNPath;
