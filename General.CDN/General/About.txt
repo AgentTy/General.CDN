@@ -1,2 +1,12 @@
-﻿The files in General and it's subfolders are copied from the General library which is available in it's entirety elsewhere.
-You may remove these files if you are including the General library as a reference.
+﻿General.CDN relies on a few classes that exist in the General namespace, but are not in this project.
+
+Current dependencies include...
+	- General.Model.URL
+	- General.Model.JsonObject
+	- StringFunctions
+
+The General DLL is included in the Externals folder for this solution, so you can reference it.
+Alternatively you could checkout and reference the General library in the General.CDN projects.
+
+General lives here...
+https://github.com/AgentTy/General
