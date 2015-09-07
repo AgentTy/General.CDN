@@ -80,6 +80,10 @@
     <Compile Include="FileServerLocal.cs" />
     <Compile Include="FileProperties.cs" />
     <Compile Include="FileServerSettings.cs" />
+    <Compile Include="General\Model\JsonObject.cs" />
+    <Compile Include="General\Model\URL.cs" />
+    <Compile Include="General\StringFunctions.cs" />
+    <Compile Include="General\Web\MimeTypeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -87,12 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="General\About.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\General\General\General.csproj">
-      <Project>{517d3dc5-c71e-4a11-a497-9d3479cf681d}</Project>
-      <Name>General</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

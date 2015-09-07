@@ -194,7 +194,7 @@ namespace General.CDN
             var blockBlob = GetBlob(qryFileDestination);
             try
             {
-                blockBlob.Properties.ContentType = General.Web.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(qryFileDestination.FileName));
+                blockBlob.Properties.ContentType = Web.MimeTypeMap.GetMimeType(System.IO.Path.GetExtension(qryFileDestination.FileName));
             }
             catch { }
 

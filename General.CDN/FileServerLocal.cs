@@ -101,7 +101,7 @@ namespace General.CDN
         bool FileExpiredLocal(IFileQuery qryFile);
         FileProperties GetFilePropertiesFromCDN(IFileQuery qryFile);
         FileProperties GetFilePropertiesLocal(IFileQuery qryFile);
-        General.Model.URL.URLCheckExistsResult FileExistsLocal_HTTPCheck(IFileQuery qryFile);
+        Model.URL.URLCheckExistsResult FileExistsLocal_HTTPCheck(IFileQuery qryFile);
 
         System.IO.Stream LoadFileStream(IFileQuery qryFile);
         byte[] LoadFileBytes(IFileQuery qryFile);
@@ -334,9 +334,9 @@ namespace General.CDN
             return System.IO.Directory.Exists(System.IO.Path.GetDirectoryName(GetLocalDiskPath(qryFile)));
         }
 
-        public General.Model.URL.URLCheckExistsResult FileExistsLocal_HTTPCheck(IFileQuery qryFile)
+        public Model.URL.URLCheckExistsResult FileExistsLocal_HTTPCheck(IFileQuery qryFile)
         {
-            return new General.Model.URL(GetLocalURL(qryFile)).CheckExists();
+            return new Model.URL(GetLocalURL(qryFile)).CheckExists();
         }
 
         public FileServerResult DeleteFileLocal(IFileQuery qryFile)

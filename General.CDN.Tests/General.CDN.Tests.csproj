@@ -100,10 +100,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\General\General\General.csproj">
-      <Project>{517d3dc5-c71e-4a11-a497-9d3479cf681d}</Project>
-      <Name>General</Name>
-    </ProjectReference>
     <ProjectReference Include="..\General.CDN\General.CDN.csproj">
       <Project>{77001904-309d-4b8b-88a4-2f0508c9900a}</Project>
       <Name>General.CDN</Name>

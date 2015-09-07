@@ -89,7 +89,7 @@ namespace General.CDN.Tests.Controllers
             Assert.IsFalse(server1.FileExistsLocal(file3));
             Assert.IsFalse(server1.FileExistsInCDN(file3));
             var strURL3 = server1.GetCDNURL(file3);
-            Assert.IsTrue(General.Model.URL.IsValid(strURL3));
+            Assert.IsTrue(Model.URL.IsValid(strURL3));
             var props2 = server1.GetFilePropertiesFromCDN(file3);
             Assert.IsNull(props2);
 
@@ -189,7 +189,7 @@ namespace General.CDN.Tests.Controllers
             Assert.IsFalse(server1.FileExistsLocal(file3));
             Assert.IsFalse(server1.FileExistsInCDN(file3));
             var strURL3 = server1.GetCDNURL(file3);
-            Assert.IsTrue(General.Model.URL.IsValid(strURL3));
+            Assert.IsTrue(Model.URL.IsValid(strURL3));
             var props2 = server1.GetFilePropertiesFromCDN(file3);
             Assert.IsNull(props2);
             

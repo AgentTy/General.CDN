@@ -3,10 +3,11 @@
 Current dependencies include...
 	- General.Model.URL
 	- General.Model.JsonObject
+	- General.Web.MimeTypeMap
 	- StringFunctions
 
-The General DLL is included in the Externals folder for this solution, so you can reference it.
-Alternatively you could checkout and reference the General library in the General.CDN projects.
+In order to minimize dependencies, I've copied the above classes into this project and placed them in the General.CDN namespace. 
+You will not need to reference General in order to use General.CDN. It's ugly, but I'll just have to keep them in sync manually.
 
 General lives here...
 https://github.com/AgentTy/General

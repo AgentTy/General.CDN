@@ -17,7 +17,7 @@ namespace General.CDN
     }
 
     [DataContract]
-    public class FileQuery : General.Model.JsonObject, IFileQuery
+    public class FileQuery : Model.JsonObject, IFileQuery
     {
         public FileQuery()
         {

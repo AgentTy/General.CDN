@@ -45,7 +45,7 @@ namespace General.CDN.Tests.Controllers
 
             string strURL, strLocalRelativePath, strPhysicalPath, strBasePath, strCDNPath;
             bool blnExistsLocal = false;
-            General.Model.URL.URLCheckExistsResult enuExistsRemote = General.Model.URL.URLCheckExistsResult.Unknown;
+            Model.URL.URLCheckExistsResult enuExistsRemote = Model.URL.URLCheckExistsResult.Unknown;
             // Assert
             strURL = server1.GetLocalURL(file1);
             strPhysicalPath = server1.GetLocalDiskPath(file1);
@@ -66,7 +66,7 @@ namespace General.CDN.Tests.Controllers
             Assert.IsTrue(Uri.IsWellFormedUriString(strLocalRelativePath, UriKind.Relative));
             Assert.IsTrue(Uri.IsWellFormedUriString(strBasePath, UriKind.Relative));
             Assert.IsTrue(Uri.IsWellFormedUriString(strCDNPath, UriKind.Relative));
-            Assert.IsTrue(General.Model.URL.IsValid(strURL));
+            Assert.IsTrue(Model.URL.IsValid(strURL));
             //Assert.IsTrue(enuExistsRemote == General.Model.URL.URLCheckExistsResult.Exists);
 
             strURL = server2.GetLocalURL(file2);
@@ -88,7 +88,7 @@ namespace General.CDN.Tests.Controllers
             Assert.IsTrue(Uri.IsWellFormedUriString(strLocalRelativePath, UriKind.Relative));
             Assert.IsTrue(Uri.IsWellFormedUriString(strBasePath, UriKind.Relative));
             Assert.IsTrue(Uri.IsWellFormedUriString(strCDNPath, UriKind.Relative));
-            Assert.IsTrue(General.Model.URL.IsValid(strURL));
+            Assert.IsTrue(Model.URL.IsValid(strURL));
             //Assert.IsTrue(enuExistsRemote == General.Model.URL.URLCheckExistsResult.Exists);
 
             //This should not exist because it's the wrong server for the file.
