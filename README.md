@@ -1,7 +1,7 @@
 # General.CDN
 General.CDN for .Net C# provides an easy interface that turns Amazon S3 or Azure Blob Storage into a quick and dirty cloud storage system. Use it to sync files between servers or backup to the cloud.
 
-In order to compile and run this solution, you may need to do the following...
+           In order to compile and run this solution, you may need to do the following...
            1. Enable NuGet package restore for the solution
            2. Remove and re-install the following NuGet packages
                       a. AWS SDK for .Net
