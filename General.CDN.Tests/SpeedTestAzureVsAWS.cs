@@ -49,7 +49,10 @@ namespace General.CDN.Tests.Controllers
                 server1.Delete(file1);
             Assert.IsFalse(server1.FileExistsInCDN(file1));
             Assert.IsFalse(server1.FileExistsLocal(file1));
+            file1.MetaData.Add("test", "Value");
             server1.StoreImage(strDesertPath, file1);
+            var props = server1.GetFilePropertiesFromCDN(file1);
+            props.MetaData.Remove("nothing");
             Assert.IsTrue(server1.FileExistsLocal(file1));
             Assert.IsTrue(server1.FileExistsInCDN(file1));
             var props1CDN = server1.GetFilePropertiesFromCDN(file1);
@@ -164,7 +167,10 @@ namespace General.CDN.Tests.Controllers
                 server1.Delete(file1);
             Assert.IsFalse(server1.FileExistsInCDN(file1));
             Assert.IsFalse(server1.FileExistsLocal(file1));
+            file1.MetaData.Add("test", "Value");
             server1.StoreImage(strFishPath, file1);
+            var props = server1.GetFilePropertiesFromCDN(file1);
+            props.MetaData.Remove("nothing");
             Assert.IsTrue(server1.FileExistsLocal(file1));
             Assert.IsTrue(server1.FileExistsInCDN(file1));
             var props1CDN = server1.GetFilePropertiesFromCDN(file1);

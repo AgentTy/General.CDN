@@ -99,6 +99,14 @@ namespace General.CDN
                 props.LastModified = new DateTimeOffset(objRef.LastModified);
                 props.Created = props.LastModified;
                 props.URL = GetCDNURL(qryFile);
+
+                if (objRef.Metadata != null)
+                {
+                    props.MetaData = new Dictionary<string, string>();
+                    foreach (var key in objRef.Metadata.Keys) {
+                        props.MetaData.Add(key, objRef.Metadata[key]);
+                    }
+                }
                 return props;
             }
             catch (Amazon.S3.AmazonS3Exception ex)

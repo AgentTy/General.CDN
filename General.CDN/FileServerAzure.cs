@@ -96,6 +96,7 @@ namespace General.CDN
             {
                 blob.FetchAttributes();
                 FileProperties props = new FileProperties();
+                props.MetaData = blob.Metadata;
                 props.Source = blob.Properties;
                 props.Length = blob.Properties.Length;
                 props.ContentMD5 = blob.Properties.ContentMD5;

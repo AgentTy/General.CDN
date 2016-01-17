@@ -20,7 +20,7 @@ namespace General.CDN
         public DateTimeOffset? LastModified { get; set; }
         public DateTimeOffset? Created { get; set; }
         public string URL { get; set; }
-
+        public IDictionary<string, string> MetaData { get; set; }
         public object Source { get; set; }
 
         public bool IsCurrentVersionOf(FileProperties fileMaster)
