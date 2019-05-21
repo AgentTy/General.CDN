@@ -10,8 +10,8 @@ namespace General.CDN
    
     public class FileServerResult
     {
-        public static FileServerResult Successful = new FileServerResult(true);
-        public static FileServerResult Failure = new FileServerResult(false);
+        public static FileServerResult Successful() { return new FileServerResult(true); }
+        public static FileServerResult Failure() { return new FileServerResult(false); }
 
         public FileServerResult(bool blnSuccess)
         {
@@ -343,7 +343,7 @@ namespace General.CDN
         {
             if (FileExistsLocal(qryFile))
                 System.IO.File.Delete(GetLocalDiskPath(qryFile));
-            return FileServerResult.Successful;
+            return FileServerResult.Successful();
         }
         public Task<FileServerResult> DeleteFileLocalAsync(IFileQuery qryFile)
         {
@@ -356,7 +356,7 @@ namespace General.CDN
         public FileServerResult WriteFileLocal(System.IO.Stream stmFile, IFileQuery qryFile)
         {
             if (Settings.LocalReadOnlyMode)
-                return FileServerResult.Failure;
+                return FileServerResult.Failure();
             if (Settings.OverwriteExistingFiles)
                 DeleteFileLocal(qryFile);
             using (var writer = new System.IO.StreamWriter(GetAndCreateLocalDiskPath(qryFile)))
@@ -365,7 +365,7 @@ namespace General.CDN
                 stmFile.CopyTo(writer.BaseStream);
                 writer.Close();
             }
-            return FileServerResult.Successful;
+            return FileServerResult.Successful();
         }
         public Task<FileServerResult> WriteFileLocalAsync(System.IO.Stream stmFile, IFileQuery qryFile)
         {
@@ -378,9 +378,9 @@ namespace General.CDN
         public FileServerResult WriteFileLocal(string strSourceFilePath, IFileQuery qryFile)
         {
             if (Settings.LocalReadOnlyMode)
-                return FileServerResult.Failure;
+                return FileServerResult.Failure();
             System.IO.File.Copy(strSourceFilePath, GetAndCreateLocalDiskPath(qryFile), Settings.OverwriteExistingFiles);
-            return FileServerResult.Successful;
+            return FileServerResult.Successful();
         }
         public Task<FileServerResult> WriteFileLocalAsync(string strSourceFilePath, IFileQuery qryFile)
         {
@@ -393,12 +393,12 @@ namespace General.CDN
         public FileServerResult WriteFileFromStringLocal(string strFileBody, IFileQuery qryFile, System.Text.Encoding encoding = null)
         {
             if (Settings.LocalReadOnlyMode)
-                return FileServerResult.Failure;
+                return FileServerResult.Failure();
             if (encoding != null)
                 System.IO.File.WriteAllText(GetAndCreateLocalDiskPath(qryFile), strFileBody, encoding);
             else
                 System.IO.File.WriteAllText(GetAndCreateLocalDiskPath(qryFile), strFileBody);
-            return FileServerResult.Successful;
+            return FileServerResult.Successful();
         }
         public Task<FileServerResult> WriteFileFromStringLocalAsync(string strFileBody, IFileQuery qryFile)
         {
@@ -411,7 +411,7 @@ namespace General.CDN
         public FileServerResult WriteImageLocal(System.IO.Stream stmImage, IFileQuery qryFile, System.Drawing.Imaging.ImageFormat enuFormat = null)
         {
             if (Settings.LocalReadOnlyMode)
-                return FileServerResult.Failure;
+                return FileServerResult.Failure();
             if (Settings.OverwriteExistingFiles)
                 DeleteFileLocal(qryFile);
             using (Image img = System.Drawing.Image.FromStream(stmImage))
@@ -421,7 +421,7 @@ namespace General.CDN
                 else
                     img.Save(GetAndCreateLocalDiskPath(qryFile));
             }
-            return FileServerResult.Successful;
+            return FileServerResult.Successful();
         }
         public Task<FileServerResult> WriteImageLocalAsync(System.IO.Stream stmImage, IFileQuery qryFile, System.Drawing.Imaging.ImageFormat enuFormat = null)
         {
@@ -434,14 +434,14 @@ namespace General.CDN
         public FileServerResult WriteImageLocal(Image objImage, IFileQuery qryFile, System.Drawing.Imaging.ImageFormat enuFormat = null)
         {
             if (Settings.LocalReadOnlyMode)
-                return FileServerResult.Failure;
+                return FileServerResult.Failure();
             if (Settings.OverwriteExistingFiles)
                 DeleteFileLocal(qryFile);
             if (enuFormat != null)
                 objImage.Save(GetAndCreateLocalDiskPath(qryFile), enuFormat);
             else
                 objImage.Save(GetAndCreateLocalDiskPath(qryFile));
-            return FileServerResult.Successful;
+            return FileServerResult.Successful();
         }
         public Task<FileServerResult> WriteImageLocalAsync(Image objImage, IFileQuery qryFile, System.Drawing.Imaging.ImageFormat enuFormat = null)
         {
@@ -454,9 +454,9 @@ namespace General.CDN
         public FileServerResult WriteImageLocal(string strSourceImagePath, IFileQuery qryFile)
         {
             if (Settings.LocalReadOnlyMode)
-                return FileServerResult.Failure;
+                return FileServerResult.Failure();
             System.IO.File.Copy(strSourceImagePath, GetAndCreateLocalDiskPath(qryFile), Settings.OverwriteExistingFiles);
-            return FileServerResult.Successful;
+            return FileServerResult.Successful();
         }
         public Task<FileServerResult> WriteImageLocalAsync(string strSourceImagePath, IFileQuery qryFile)
         {

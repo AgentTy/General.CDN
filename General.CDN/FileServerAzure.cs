@@ -217,7 +217,7 @@ namespace General.CDN
         {
             var result = new FileServerResult(false);
             var blob = GetBlobForStorage(qryFileDestination);
-            blob.UploadFromFile(strSourceFilePath, System.IO.FileMode.Open);
+            blob.UploadFromFile(strSourceFilePath);
             result = base.WriteFileLocal(strSourceFilePath, qryFileDestination);
             return result;
         }
@@ -228,7 +228,7 @@ namespace General.CDN
             if (result.Success)
             {
                 var blob = GetBlobForStorage(qryFileDestination);
-                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination), System.IO.FileMode.Open);
+                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
             }
             return result;
         }
@@ -248,7 +248,7 @@ namespace General.CDN
             if(result.Success)
             {
                 var blob = GetBlobForStorage(qryFileDestination);
-                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination), System.IO.FileMode.Open);
+                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
             }
             return result;
         }
@@ -259,7 +259,7 @@ namespace General.CDN
             if (result.Success)
             {
                 var blob = GetBlobForStorage(qryFileDestination);
-                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination), System.IO.FileMode.Open);
+                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
             }
             return result;
         }
@@ -268,7 +268,7 @@ namespace General.CDN
         {
             var result = new FileServerResult(false);
             var blob = GetBlobForStorage(qryFileDestination);
-            blob.UploadFromFile(strSourceImagePath, System.IO.FileMode.Open);
+            blob.UploadFromFile(strSourceImagePath);
             result = base.WriteImageLocal(strSourceImagePath, qryFileDestination);
             return result;
         }
