@@ -11,6 +11,8 @@ namespace General.CDN
         private bool _blnOverwriteExistingFiles = true;
         public bool OverwriteExistingFiles { get { return _blnOverwriteExistingFiles; } set { _blnOverwriteExistingFiles = value; } }
 
+        public bool DisableLocalStorage { get; set; }
+
         public string LocalHostedURL { get; set; }
         public string LocalStoragePath { get; set; }
         public bool LocalReadOnlyMode { get; set; }

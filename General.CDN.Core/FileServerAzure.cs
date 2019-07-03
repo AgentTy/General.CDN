@@ -3,6 +3,8 @@ using Microsoft.Azure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +29,8 @@ namespace General.CDN
 
         public CloudBlobClient AzureBlobClient { get; set; }
 
+        public bool CDNOnly { get { return this.Settings.DisableLocalStorage; } }
+
         #endregion
 
         #region Constructors
@@ -40,6 +44,13 @@ namespace General.CDN
             : base(objSettings)
         {
             AzureStorageAccount = objCDNClient;
+        }
+
+        public FileServerAzure(CloudStorageAccount objCDNClient, string strCDNBucket)
+    : base(DisableLocalStorage: true)
+        {
+            AzureStorageAccount = objCDNClient;
+            this.Settings.CDNStorageBucket = strCDNBucket;
         }
 
         public FileServerAzure(string strLocalStoragePath, string strLocalHostedURL, CloudStorageAccount objCDNClient, string strCDNBucket)
@@ -75,6 +86,9 @@ namespace General.CDN
         #region File Versioning Methods
         public override bool FileExpiredLocal(IFileQuery qryFile)
         {
+            if (CDNOnly)
+                return true;
+
             var propsCDN = GetFilePropertiesFromCDN(qryFile);
             if (propsCDN == null)
                 return false; //First, default to false if there is no object in the CDN
@@ -143,6 +157,9 @@ namespace General.CDN
         #region ImportIfNeeded
         public bool ImportIfNeeded(IFileQuery qryFile)
         {
+            if (CDNOnly)
+                return false;
+
             if(FileExistsLocal(qryFile) && !FileExistsInCDN(qryFile))
             {
                 PushToCDN(qryFile);
@@ -155,37 +172,81 @@ namespace General.CDN
         #region Load Overrides
         public override System.IO.Stream LoadFileStream(IFileQuery qryFile)
         {
-            if (FileExpiredLocal(qryFile))
-                SaveFromCDN(qryFile);
-            return base.LoadFileStream(qryFile);
+            if (CDNOnly)
+            {
+                var blob = GetBlob(qryFile);
+                var stream = new System.IO.MemoryStream();
+                blob.DownloadToStream(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                return stream;
+            }
+            else
+            {
+                if (FileExpiredLocal(qryFile))
+                    SaveFromCDN(qryFile);
+                return base.LoadFileStream(qryFile);
+            }
         }
 
         public override byte[] LoadFileBytes(IFileQuery qryFile)
         {
-            if (FileExpiredLocal(qryFile))
-                SaveFromCDN(qryFile);
-            return base.LoadFileBytes(qryFile);
+            if (CDNOnly)
+            {
+                var blob = GetBlob(qryFile);
+                byte[] fileContent = new byte[blob.Properties.Length];
+                blob.DownloadToByteArray(fileContent, 0);
+                return fileContent;
+            }
+            else
+            {
+                if (FileExpiredLocal(qryFile))
+                    SaveFromCDN(qryFile);
+                return base.LoadFileBytes(qryFile);
+            }
         }
 
         public override string LoadFileText(IFileQuery qryFile)
         {
-            if (FileExpiredLocal(qryFile))
-                SaveFromCDN(qryFile);
-            return base.LoadFileText(qryFile);
+            if (CDNOnly)
+            {
+                var blob = GetBlob(qryFile);
+                return blob.DownloadText();
+            }
+            else
+            {
+                if (FileExpiredLocal(qryFile))
+                    SaveFromCDN(qryFile);
+                return base.LoadFileText(qryFile);
+            }
         }
 
         public override string LoadFileText(IFileQuery qryFile, System.Text.Encoding encoding)
         {
-            if (FileExpiredLocal(qryFile))
-                SaveFromCDN(qryFile);
-            return base.LoadFileText(qryFile, encoding);
+            if (CDNOnly)
+            {
+                var blob = GetBlob(qryFile);
+                return blob.DownloadText(encoding);
+            }
+            else
+            {
+                if (FileExpiredLocal(qryFile))
+                    SaveFromCDN(qryFile);
+                return base.LoadFileText(qryFile, encoding);
+            }
         }
 
         public override System.Drawing.Image LoadImage(IFileQuery qryFile)
         {
-            if (FileExpiredLocal(qryFile))
-                SaveFromCDN(qryFile);
-            return base.LoadImage(qryFile);
+            if (CDNOnly)
+            {
+                return Image.FromStream(LoadFileStream(qryFile));
+            }
+            else
+            {
+                if (FileExpiredLocal(qryFile))
+                    SaveFromCDN(qryFile);
+                return base.LoadImage(qryFile);
+            }
         }
         #endregion
 
@@ -215,53 +276,114 @@ namespace General.CDN
 
         public override FileServerResult StoreFile(string strSourceFilePath, IFileQuery qryFileDestination)
         {
-            var result = new FileServerResult(false);
+            var result = new FileServerResult(true);
             var blob = GetBlobForStorage(qryFileDestination);
             blob.UploadFromFile(strSourceFilePath);
-            result = base.WriteFileLocal(strSourceFilePath, qryFileDestination);
+            if(!CDNOnly)
+                result = base.WriteFileLocal(strSourceFilePath, qryFileDestination);
+            result.Uri = blob.Uri;
             return result;
         }
 
         public override FileServerResult StoreFile(System.IO.Stream stmFile, IFileQuery qryFileDestination)
         {
-            var result = base.WriteFileLocal(stmFile, qryFileDestination);
-            if (result.Success)
+            if (CDNOnly)
             {
+                var result = new FileServerResult(true);
                 var blob = GetBlobForStorage(qryFileDestination);
-                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
+                blob.UploadFromStream(stmFile);
+                result.Uri = blob.Uri;
+                return result;
             }
-            return result;
+            else
+            {
+                var result = base.WriteFileLocal(stmFile, qryFileDestination);
+                if (result.Success)
+                {
+                    var blob = GetBlobForStorage(qryFileDestination);
+                    blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
+                }
+                return result;
+            }
         }
 
         public override FileServerResult StoreFileFromString(string strFileBody, IFileQuery qryFileDestination, Encoding encoding = null)
         {
-            var result = new FileServerResult(false);
+            var result = new FileServerResult(true);
             var blob = GetBlobForStorage(qryFileDestination);
             blob.UploadText(strFileBody, encoding);
-            result = base.WriteFileFromStringLocal(strFileBody, qryFileDestination, encoding);
+            if (!CDNOnly)
+                result = base.WriteFileFromStringLocal(strFileBody, qryFileDestination, encoding);
+            result.Uri = blob.Uri;
             return result;
         }
 
         public override FileServerResult StoreImage(System.Drawing.Image objImage, IFileQuery qryFileDestination, System.Drawing.Imaging.ImageFormat enuFormat = null)
         {
-            var result = base.WriteImageLocal(objImage, qryFileDestination, enuFormat);
-            if(result.Success)
+            if (CDNOnly)
             {
+                var result = new FileServerResult(true);
                 var blob = GetBlobForStorage(qryFileDestination);
-                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
+                using (System.IO.MemoryStream stmImage = new System.IO.MemoryStream())
+                {
+                    if(enuFormat != null)
+                        objImage.Save(stmImage, enuFormat);
+                    else
+                        objImage.Save(stmImage, objImage.RawFormat);
+
+                    stmImage.Seek(0, SeekOrigin.Begin);
+                    blob.UploadFromStream(stmImage);
+                }
+                result.Uri = blob.Uri;
+                return result;
             }
-            return result;
+            else
+            {
+                var result = base.WriteImageLocal(objImage, qryFileDestination, enuFormat);
+                if (result.Success)
+                {
+                    var blob = GetBlobForStorage(qryFileDestination);
+                    blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
+                    result.Uri = blob.Uri;
+                }
+                return result;
+            }
         }
 
         public override FileServerResult StoreImage(System.IO.Stream stmImage, IFileQuery qryFileDestination, System.Drawing.Imaging.ImageFormat enuFormat = null)
         {
-            var result = base.WriteImageLocal(stmImage, qryFileDestination, enuFormat);
-            if (result.Success)
+            if (CDNOnly)
             {
+                var result = new FileServerResult(true);
                 var blob = GetBlobForStorage(qryFileDestination);
-                blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
+
+                if (enuFormat != null)
+                {
+                    using(System.IO.MemoryStream stmImageFormatted = new System.IO.MemoryStream())
+                    {
+                        using (Image img = System.Drawing.Image.FromStream(stmImage))
+                        {
+                            img.Save(stmImageFormatted, enuFormat);
+                            stmImageFormatted.Seek(0, SeekOrigin.Begin);
+                        }
+                        blob.UploadFromStream(stmImageFormatted);
+                    }
+                }
+                else
+                    blob.UploadFromStream(stmImage);
+                result.Uri = blob.Uri;
+                return result;
             }
-            return result;
+            else
+            {
+                var result = base.WriteImageLocal(stmImage, qryFileDestination, enuFormat);
+                if (result.Success)
+                {
+                    var blob = GetBlobForStorage(qryFileDestination);
+                    blob.UploadFromFile(GetLocalDiskPath(qryFileDestination));
+                }
+                return result;
+            }
         }
 
         public override FileServerResult StoreImage(string strSourceImagePath, IFileQuery qryFileDestination)
@@ -269,7 +391,9 @@ namespace General.CDN
             var result = new FileServerResult(false);
             var blob = GetBlobForStorage(qryFileDestination);
             blob.UploadFromFile(strSourceImagePath);
-            result = base.WriteImageLocal(strSourceImagePath, qryFileDestination);
+            if(!CDNOnly)
+                result = base.WriteImageLocal(strSourceImagePath, qryFileDestination);
+            result.Uri = blob.Uri;
             return result;
         }
         #endregion
@@ -277,7 +401,11 @@ namespace General.CDN
         #region Delete Overrides
         public override FileServerResult Delete(IFileQuery qryFile)
         {
-            var result = base.DeleteFileLocal(qryFile);
+            FileServerResult result;
+            if (CDNOnly)
+                result = new FileServerResult(true);
+            else
+                result = base.DeleteFileLocal(qryFile);
             var blob = GetBlob(qryFile);
             var blnResult = blob.DeleteIfExists();
             if (!blnResult)

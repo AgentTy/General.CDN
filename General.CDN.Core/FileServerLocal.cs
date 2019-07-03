@@ -20,6 +20,7 @@ namespace General.CDN
 
         public bool Success { get; set; }
         public string Message { get; set; }
+        public Uri Uri { get; set; }
     }
 
     public interface IFileServer
@@ -159,6 +160,13 @@ namespace General.CDN
             Settings = new FileServerSettings();
             Settings.LocalStoragePath = strLocalStoragePath;
             Settings.LocalHostedURL = strLocalHostedURL;
+            CleanupPaths();
+        }
+
+        public FileServerLocal(bool DisableLocalStorage)
+        {
+            Settings = new FileServerSettings();
+            Settings.DisableLocalStorage = DisableLocalStorage;
             CleanupPaths();
         }
         #endregion
@@ -309,6 +317,8 @@ namespace General.CDN
         #region Local File Methods
         public bool FileExistsLocal(IFileQuery qryFile)
         {
+            if (Settings.DisableLocalStorage)
+                return false;
             return System.IO.File.Exists(GetLocalDiskPath(qryFile));
         }
 
