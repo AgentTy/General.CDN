@@ -1,0 +1,13 @@
+﻿General.CDN relies on a few classes that exist in the General namespace, but are not in this project.
+
+Current dependencies include...
+	- General.Model.URL
+	- General.Model.JsonObject
+	- General.Web.MimeTypeMap
+	- StringFunctions
+
+In order to minimize dependencies, I've copied the above classes into this project and placed them in the General.CDN namespace. 
+You will not need to reference General in order to use General.CDN. It's ugly, but I'll just have to keep them in sync manually.
+
+General lives here...
+https://github.com/AgentTy/General
