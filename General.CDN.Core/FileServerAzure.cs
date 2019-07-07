@@ -75,6 +75,11 @@ namespace General.CDN
             }
         }
 
+        public CloudBlockBlob GetBlobReference(IFileQuery qryFile)
+        {
+            return GetBlob(qryFile);
+        }
+
         protected CloudBlockBlob GetBlob(IFileQuery qryFile)
         {
             CloudBlobContainer objAzureContainer = AzureBlobClient.GetContainerReference(Settings.CDNStorageBucket);
